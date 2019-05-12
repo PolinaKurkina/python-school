@@ -1,0 +1,50 @@
+from newsapi import NewsApiClient
+import pprint
+
+newsapi = NewsApiClient(api_key='ef20673d0898483d92ccb1da29b78bd9')
+
+
+
+def get_by_keywords(q_ = None, language_ = None, country_ = None,  page_size_ = 20, page_ = 1):
+    all_articles = newsapi.get_everything(q = q_,
+                                              language = language_,
+                                              country = country,
+                                              sort_by = 'relevancy',
+                                              page_size = page_size_,
+                                              page = page_)
+    return all_articles
+
+
+
+
+def get_by_category(category_ = None, language_ = None, country_ = None,  page_size_ = 20, page_ = 1): 
+    all_articles = newsapi.get_everything(category = category_,
+                                              language = language_,
+                                              country = country,
+                                              sort_by = 'relevancy',
+                                              page_size = page_size_,
+                                              page = page_)
+    return all_articles
+
+
+def serch_by_request(q_ = None, language_ = None, country_ = None,  page_size_ = 20, page_ = 1):
+    all_articles = newsapi.get_everything(q = q_,
+                                              language = language_,
+                                              country = country,
+                                              sort_by = 'relevancy',
+                                              page_size = page_size_,
+                                              page = page_)
+    return all_articles 
+
+q = str(input("Укажите ключевое слово: "))
+category = str(input("Укажите категорию: "))
+phrase = str(input("Введите запрос: "))
+language = str(input("Укажите язык: "))
+country = str(input("Укажите страну: "))
+page_size = int(input("Укажите размер страницы: "))
+page = int(input("Укажите номер страницы: "))
+
+
+pprint.pprint(get_by_keywords(q, language, country, page_size, page))
+pprint.pprint(get_by_category(category, language, country, page_size, page))
+pprint.pprint(serch_by_request(phrase, language, country, page_size, page))
