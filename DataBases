@@ -1,0 +1,48 @@
+import sqlite3 as lite 
+import sys
+import pickle
+import pprint
+
+con = None
+
+query_string1 = '''
+  DECLARE @datetime datetime = Employee.BirthDate
+  DECLARE @date date = @datetime  
+  SELECT TOP 10  CustomerId, FirstName, Phone, Company
+  FROM Customer 
+  WHERE (CURDATE () - @date)/86400 > 50  AND Genre.Name <> Rock
+  ORDER BY Customer.City ASC, Customer.Email DESC;
+'''
+
+query_string2 = '''
+  SELECT Customer.FirstName, Customer.LastName, Customer.Phone, Employee.FirstName, Employee.LastName, Employee.Phone
+  FROM Customer, Employee;
+'''
+
+query_string3 = '''
+  SELECT  FirstName, Phone
+  FROM Customer
+  ORDER BY Track.UnitPrice DESC;
+'''
+
+def get(query_string):
+    Database=(r'C:\SQLite\Chinook_Sqlite.sqlite')
+    try:
+      con = lite.connect(Database)
+      cur = con.cursor()  
+      cur.execute(query_string)  
+      result = cur.fetchall()
+      pprint.pprint(result)
+      d = open('data.txt','wb')
+      pickle.dump(dict(result),d)
+      d.close()
+    except Exception as e:
+      print(e)
+      sys.exit(1)
+    finally:
+      if con is not None:
+        con.close()
+
+get(query_string1)
+get(query_string2)
+get(query_string3)
