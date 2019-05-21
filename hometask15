@@ -1,0 +1,33 @@
+
+//Первое задание
+
+SELECT  c.LastName, c.FirstName, c.Phone
+FROM Customer AS c
+INNER JOIN Invoice as i ON i.CustomerId = c.CustomerId
+WHERE c.City IN (SELECT c.City
+        FROM Customer AS c
+        GROUP BY c.City
+        HAVING COUNT(c.City)>1
+       )
+GROUP BY c.CustomerId
+
+//Второе задание
+SELECT i.BillingCity
+FROM Invoice as i
+GROUP BY i.BillingCity
+ORDER BY sum(i.Total) DESC
+LIMIT 3
+
+//Третье задание
+SELECT g.Name, t.Name, alb.Title, art.Name
+FROM Genre AS g
+INNER JOIN Track as t ON t.GenreId = g.GenreId
+INNER JOIN Album as alb ON alb.AlbumId= t.AlbumId
+INNER JOIN Artist as art ON art.ArtistId = alb.ArtistId
+WHERE g.Name = (SELECT g.Name
+FROM InvoiceLine AS il
+INNER JOIN Track as t ON t.TrackId = il.TrackId
+INNER JOIN Genre as g ON g.GenreId = t.GenreId
+GROUP BY g.GenreId
+ORDER BY count(g.GenreId) DESC
+LIMIT 1)
