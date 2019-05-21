@@ -25,9 +25,9 @@ INNER JOIN Track as t ON t.GenreId = g.GenreId
 INNER JOIN Album as alb ON alb.AlbumId= t.AlbumId
 INNER JOIN Artist as art ON art.ArtistId = alb.ArtistId
 WHERE g.Name = (SELECT g.Name
-FROM InvoiceLine AS il
-INNER JOIN Track as t ON t.TrackId = il.TrackId
-INNER JOIN Genre as g ON g.GenreId = t.GenreId
-GROUP BY g.GenreId
-ORDER BY count(g.GenreId) DESC
-LIMIT 1)
+        FROM InvoiceLine AS il
+        INNER JOIN Track as t ON t.TrackId = il.TrackId
+        INNER JOIN Genre as g ON g.GenreId = t.GenreId
+        GROUP BY g.GenreId
+        ORDER BY count(g.GenreId) DESC
+        LIMIT 1)
