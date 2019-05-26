@@ -1,0 +1,48 @@
+CREATE TABLE IF NOT EXISTS
+users(
+    ID  INTEGER PRIMARY KEY AUTOINCREMENT       NOT NULL,
+    FIRST_NAME         CHAR(20)      NOT NULL,
+    LAST_NAME          CHAR(20)      NOT NULL,
+    BIRTH_DATE         DATE          NOT NULL,
+    EMAIL              CHAR(20)      NOT NULL,
+    PHONE              CHAR(15),
+    ADDRESS            CHAR(50)
+);
+
+CREATE TABLE IF NOT EXISTS
+news(
+    ID  INTEGER PRIMARY KEY AUTOINCREMENT       NOT NULL,
+    NAME               CHAR(50)      NOT NULL,
+    GENRE_ID           INTEGER       NOT NULL,
+      FOREIGN KEY (GENRE_ID)
+      REFERENCES genres(ID),
+    KEY_WORD_ID        INTEGER       NOT NULL,
+      FOREIGN KEY (KEY_WORD_ID)
+      REFERENCES key_words(ID)
+    );
+
+CREATE TABLE IF NOT EXISTS
+genres(
+    ID  INTEGER PRIMARY KEY AUTOINCREMENT       NOT NULL,
+    NAME               CHAR(20)      NOT NULL
+    );
+
+CREATE TABLE IF NOT EXISTS
+key_words(
+    ID  INTEGER PRIMARY KEY AUTOINCREMENT       NOT NULL,
+    NAME               CHAR(20)      NOT NULL
+    );
+
+
+CREATE TABLE IF NOT EXISTS
+subscriptions(
+    ID  INTEGER PRIMARY KEY AUTOINCREMENT       NOT NULL,
+    USER_ID             INTEGER     NOT NULL,
+      FOREIGN KEY (USER_ID)
+      REFERENCES users(ID),
+    NEWS_ID             INTEGER     NOT NULL,
+      FOREIGN KEY (NEWS_ID)
+      REFERENCES news(ID),
+    SUBSCRIPTION_DATE   DATE        NOT NULL,
+    UNIT_PRICE          FLOAT(4, 2) NOT NULL
+    );
