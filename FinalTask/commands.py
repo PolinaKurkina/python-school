@@ -1,9 +1,9 @@
 import command_system
 import vkapi
 import settings
-import mysql.connector
 from newsapi import NewsApiClient
-from mysql.connector import Error
+from mysql.connector import MySQLConnection, Error
+from python_mysql_dbconfig import read_db_config
 
 def connect():
     """ Connect to MySQL database """
@@ -11,7 +11,7 @@ def connect():
         conn = mysql.connector.connect(host='PolinaKurkina.mysql.pythonanywhere-services.com',
                                        database='VK',
                                        user='PolinaKurkina',
-                                       password='9Jncm7JKZE93Fdk')
+                                       password='')
         if conn.is_connected():
             print('Connected to MySQL database')
 
@@ -23,6 +23,81 @@ def connect():
 
 if __name__ == '__main__':
     connect()
+
+def insert_user(id, first_name, last_name):
+    query = "INSERT INTO users(id, first_name, last_name) "
+            "VALUES(%s,%s,%s)"
+    args = (id, first_name, last_name)
+
+    try:
+        db_config = read_db_config()
+        conn = MySQLConnection(**db_config)
+
+        cursor = conn.cursor()
+        cursor.execute(query, args)
+
+        if cursor.lastrowid:
+            print('last insert id', cursor.lastrowid)
+        else:
+            print('last insert id not found')
+
+        conn.commit()
+    except Error as error:
+        print(error)
+
+    finally:
+        cursor.close()
+        conn.close()
+
+def insert_keyword(user_id, name):
+    query = "INSERT INTO keywords(user_id, name) "
+            "VALUES(%s,%s)"
+    args = (user_id, name)
+
+    try:
+        db_config = read_db_config()
+        conn = MySQLConnection(**db_config)
+
+        cursor = conn.cursor()
+        cursor.execute(query, args)
+
+        if cursor.lastrowid:
+            print('last insert id', cursor.lastrowid)
+        else:
+            print('last insert id not found')
+
+        conn.commit()
+    except Error as error:
+        print(error)
+
+    finally:
+        cursor.close()
+        conn.close()
+
+def insert_category(user_id, name):
+    query = "INSERT INTO categories(user_id, name) "
+            "VALUES(%s,%s)"
+    args = (user_id, name)
+
+    try:
+        db_config = read_db_config()
+        conn = MySQLConnection(**db_config)
+
+        cursor = conn.cursor()
+        cursor.execute(query, args)
+
+        if cursor.lastrowid:
+            print('last insert id', cursor.lastrowid)
+        else:
+            print('last insert id not found')
+
+        conn.commit()
+    except Error as error:
+        print(error)
+
+    finally:
+        cursor.close()
+        conn.close()
 
 def hello():
    message = 'Приветствуем Вас в Агрегаторе Новостей!'
@@ -49,6 +124,7 @@ info_command.process = info
 
 def subscribe():
     message = 'Вы подписались на новостную рассылку.'
+
     return message
 
 
@@ -84,14 +160,14 @@ info_command.process = delete
 def get_news():
     newsapi = NewsApiClient(api_key='ef20673d0898483d92ccb1da29b78bd9')
     message = 'Наиболее релевантные новости по Вашим активным подпискам.'
-    
+
     cursor = conn.cursor()
     cursor.execute("SELECT name FROM keywords WHERE user_id =")
     key_words = cursor.fetchone()
     cursor.execute("SELECT name FROM categories WHERE user_id =")
     categories = cursor.fetchone()
     cursor.close()
-    
+
     all_articles = newsapi.get_everything(q=key_words,
                                       category=categories,
                                       language='ru',
