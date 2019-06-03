@@ -162,9 +162,9 @@ def get_news():
     message = 'Наиболее релевантные новости по Вашим активным подпискам.'
 
     cursor = conn.cursor()
-    cursor.execute("SELECT name FROM keywords WHERE user_id =")
+    cursor.execute("SELECT name FROM keywords WHERE user_id = msg["user_id"]")
     key_words = cursor.fetchone()
-    cursor.execute("SELECT name FROM categories WHERE user_id =")
+    cursor.execute("SELECT name FROM categories WHERE user_id = msg["user_id"]")
     categories = cursor.fetchone()
     cursor.close()
 
